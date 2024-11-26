@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-msignia-3ds": ["../src/index"],
+      "expo-msignia-3ds/*": ["../src/*"]
+    }
+  }
+}
