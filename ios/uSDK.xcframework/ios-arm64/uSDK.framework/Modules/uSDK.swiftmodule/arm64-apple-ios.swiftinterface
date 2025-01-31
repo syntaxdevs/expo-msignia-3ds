@@ -1,0 +1,262 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-module-flags: -target arm64-apple-ios11.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name uSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AdSupport
+import CommonCrypto
+import CoreLocation
+import CoreTelephony
+import Foundation
+import Swift
+import SystemConfiguration
+import UIKit
+import WebKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_exported import uSDK
+public class AcctInfo {
+  public init()
+  public func chAccAgeInd(_ chAccAgeInd: Swift.String) -> Self
+  public func chAccChange(_ chAccChange: Swift.String) -> Self
+  public func chAccChangeInd(_ chAccChangeInd: Swift.String) -> Self
+  public func chAccDate(_ chAccDate: Swift.String) -> Self
+  public func chAccReqID(_ chAccReqID: Swift.String) -> Self
+  public func chAccPwChange(_ chAccPwChange: Swift.String) -> Self
+  public func chAccPwChangeInd(_ chAccPwChangeInd: Swift.String) -> Self
+  public func nbPurchaseAccount(_ nbPurchaseAccount: Swift.String) -> Self
+  public func provisionAttemptsDay(_ provisionAttemptsDay: Swift.String) -> Self
+  public func txnActivityDay(_ txnActivityDay: Swift.String) -> Self
+  public func txnActivityYear(_ txnActivityYear: Swift.String) -> Self
+  public func paymentAccAge(_ paymentAccAge: Swift.String) -> Self
+  public func paymentAccInd(_ paymentAccInd: Swift.String) -> Self
+  public func shipAddressUsage(_ shipAddressUsage: Swift.String) -> Self
+  public func shipAddressUsageInd(_ shipAddressUsageInd: Swift.String) -> Self
+  public func shipNameIndicator(_ shipNameIndicator: Swift.String) -> Self
+  public func suspiciousAccActivity(_ suspiciousAccActivity: Swift.String) -> Self
+  @objc deinit
+}
+public enum AuthenticateCallback {
+  case authenticated(authenticationResult: uSDK.AuthenticationResult)
+  case notAuthenticated(authenticationResult: uSDK.AuthenticationResult)
+  case decoupledAuthBeingPerformed(authenticationResult: uSDK.AuthenticationResult)
+  case cancelled(authenticationResult: uSDK.AuthenticationResult)
+  case error(authenticationResult: uSDK.AuthenticationResult)
+}
+public struct AuthenticateSpec {
+  public var viewController: UIKit.UIViewController
+  public var userId: Swift.String?
+  public var cardId: Swift.String
+  public var orderId: Swift.String
+  public var exchangeTransactionDetailsUrl: Swift.String
+  public var transactionResultUrl: Swift.String
+  public var splitSdkServerUrl: Swift.String
+  public var threeDsData: uSDK.ThreeDsData?
+  public var merchantAuthInfo: Swift.String?
+  public init(viewController: UIKit.UIViewController, cardId: Swift.String, orderId: Swift.String, exchangeTransactionDetailsUrl: Swift.String, transactionResultUrl: Swift.String, splitSdkServerUrl: Swift.String, userId: Swift.String? = nil, threeDsData: uSDK.ThreeDsData? = nil, merchantAuthInfo: Swift.String? = nil)
+}
+public struct AuthenticationResult : Swift.Decodable {
+  public struct Error : Swift.Decodable {
+    public let errorCode: Swift.String
+    public let errorDescription: Swift.String
+    public let errorDetails: Swift.String?
+    public init(from decoder: any Swift.Decoder) throws
+  }
+  public let threeDSServerTransID: Swift.String?
+  public let splitSdkServerTransID: Swift.String?
+  public let status: uSDK.TransStatus?
+  public let cardholderInfo: Swift.String?
+  public let error: uSDK.AuthenticationResult.Error?
+  public init(from decoder: any Swift.Decoder) throws
+}
+open class ConfigParameters {
+  public static let DEFAULT_GROUP_KEY: Swift.String
+  public init()
+  public func addParam(group: Swift.String = ConfigParameters.DEFAULT_GROUP_KEY, paramName: Swift.String, paramValue: Swift.String) throws
+  public func getParamValue(group: Swift.String = ConfigParameters.DEFAULT_GROUP_KEY, paramName: Swift.String) -> Swift.String?
+  public func removeParam(group: Swift.String = ConfigParameters.DEFAULT_GROUP_KEY, paramName: Swift.String) -> Swift.String?
+  @objc deinit
+}
+public class DirectoryServer {
+  public init(id: Swift.String, publicKeyId: Swift.String, dsPublicKey: Swift.String, caCertificatePem: Swift.String, providerName: Swift.String, dsLogo: UIKit.UIImage? = nil)
+  @objc deinit
+}
+public enum ErrorDescriptions : Swift.String {
+  case MESSAGE_NOT_RECOGNIZED, GENERIC_ERROR
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct InitializeSpec {
+  public var configParameters: uSDK.ConfigParameters
+  public var locale: Foundation.Locale
+  public init()
+}
+public class MerchantRiskIndicator {
+  public init()
+  public func deliveryEmailAddress(_ deliveryEmailAddress: Swift.String) -> Self
+  public func deliveryTimeframe(_ deliveryTimeframe: Swift.String) -> Self
+  public func giftCardAmount(_ giftCardAmount: Swift.String) -> Self
+  public func giftCardCount(_ giftCardCount: Swift.String) -> Self
+  public func giftCardCurr(_ giftCardCurr: Swift.String) -> Self
+  public func preOrderDate(_ preOrderDate: Swift.String) -> Self
+  public func preOrderPurchaseInd(_ preOrderPurchaseInd: Swift.String) -> Self
+  public func reorderItemsInd(_ reorderItemsInd: Swift.String) -> Self
+  public func shipIndicator(_ shipIndicator: Swift.String) -> Self
+  @objc deinit
+}
+public class Phone {
+  public init()
+  public func cc(_ cc: Swift.String) -> Self
+  public func subscriber(_ subscriber: Swift.String) -> Self
+  @objc deinit
+}
+final public class ShellThreeDS2Service : uSDK.ThreeDS2Service {
+  public static let USDK_GROUP_KEY: Swift.String
+  public static let USDK_CHALLENGE_SCREEN_APPEARANCE_KEY: Swift.String
+  public static let USDK_CHALLENGE_SCREEN_THEME_KEY: Swift.String
+  public init()
+  final public func initialize(spec: uSDK.InitializeSpec, callback: @escaping ((Swift.Result<Swift.Bool, any Swift.Error>) -> ())) throws
+  final public func authenticate(spec: uSDK.AuthenticateSpec, callback: @escaping ((Swift.Result<uSDK.AuthenticateCallback, any Swift.Error>) -> ())) throws
+  final public func warnings() throws -> [uSDK.Warning]
+  public static func getVersion() -> Swift.String
+  @objc deinit
+}
+public enum SplitSdkAppearance : Swift.String {
+  case DARK
+  case LIGHT
+  case AUTO
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol SplitSdkClient {
+  func initialize(spec: uSDK.InitializeSpec, callback: @escaping ((Swift.Result<Swift.Bool, any Swift.Error>) -> ())) throws
+  func authenticate(spec: uSDK.AuthenticateSpec, callback: @escaping ((Swift.Result<uSDK.AuthenticateCallback, any Swift.Error>) -> ())) throws
+  func warnings() throws -> [uSDK.Warning]
+}
+final public class SplitSdkClientImpl : uSDK.SplitSdkClient {
+  public static let SPLIT_SDK_GROUP_KEY: Swift.String
+  public static let SPLIT_SDK_CHALLENGE_SCREEN_APPEARANCE_KEY: Swift.String
+  public static let SPLIT_SDK_CHALLENGE_SCREEN_THEME_KEY: Swift.String
+  public init()
+  final public func initialize(spec: uSDK.InitializeSpec, callback: @escaping ((Swift.Result<Swift.Bool, any Swift.Error>) -> ())) throws
+  final public func authenticate(spec: uSDK.AuthenticateSpec, callback: @escaping ((Swift.Result<uSDK.AuthenticateCallback, any Swift.Error>) -> ())) throws
+  final public func warnings() throws -> [uSDK.Warning]
+  public static func getVersion() -> Swift.String
+  @objc deinit
+}
+public enum SplitSdkTheme : Swift.String {
+  case DEFAULT
+  case MASTRCARD
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol ThreeDS2Service {
+  func initialize(spec: uSDK.InitializeSpec, callback: @escaping ((Swift.Result<Swift.Bool, any Swift.Error>) -> ())) throws
+  func authenticate(spec: uSDK.AuthenticateSpec, callback: @escaping ((Swift.Result<uSDK.AuthenticateCallback, any Swift.Error>) -> ())) throws
+  func warnings() throws -> [uSDK.Warning]
+}
+final public class ThreeDsData {
+  public init()
+  final public func addCustomDataField(key: Swift.String, value: Any) -> Self
+  final public func threeDSRequestorAuthenticationInd(_ threeDSRequestorAuthenticationInd: Swift.String) -> Self
+  final public func threeDSRequestorAuthenticationInfo(_ threeDSRequestorAuthenticationInfo: [uSDK.ThreeDSRequestorAuthenticationInfo]) -> Self
+  final public func threeDSRequestorChallengeInd(_ threeDSRequestorChallengeInd: Swift.String) -> Self
+  final public func threeDSRequestorID(_ threeDSRequestorID: Swift.String) -> Self
+  final public func threeDSRequestorName(_ threeDSRequestorName: Swift.String) -> Self
+  final public func threeDSRequestorPriorAuthenticationInfo(_ threeDSRequestorPriorAuthenticationInfo: uSDK.ThreeDSRequestorPriorAuthenticationInfo) -> Self
+  final public func threeDSRequestorURL(_ threeDSRequestorURL: Swift.String) -> Self
+  final public func acquirerBIN(_ acquirerBIN: Swift.String) -> Self
+  final public func acquirerMerchantID(_ acquirerMerchantID: Swift.String) -> Self
+  final public func addrMatch(_ addrMatch: Swift.String) -> Self
+  final public func cardExpiryDate(_ cardExpiryDate: Swift.String) -> Self
+  final public func acctInfo(_ acctInfo: uSDK.AcctInfo) -> Self
+  final public func acctNumber(_ acctNumber: Swift.String) -> Self
+  final public func acctID(_ acctID: Swift.String) -> Self
+  final public func billAddrCity(_ billAddrCity: Swift.String) -> Self
+  final public func billAddrCountry(_ billAddrCountry: Swift.String) -> Self
+  final public func billAddrLine1(_ billAddrLine1: Swift.String) -> Self
+  final public func billAddrLine2(_ billAddrLine2: Swift.String) -> Self
+  final public func billAddrLine3(_ billAddrLine3: Swift.String) -> Self
+  final public func billAddrPostCode(_ billAddrPostCode: Swift.String) -> Self
+  final public func billAddrState(_ billAddrState: Swift.String) -> Self
+  final public func email(_ email: Swift.String) -> Self
+  final public func homePhone(_ homePhone: uSDK.Phone) -> Self
+  final public func mobilePhone(_ mobilePhone: uSDK.Phone) -> Self
+  final public func cardholderName(_ cardholderName: Swift.String) -> Self
+  final public func shipAddrCity(_ shipAddrCity: Swift.String) -> Self
+  final public func shipAddrCountry(_ shipAddrCountry: Swift.String) -> Self
+  final public func shipAddrLine1(_ shipAddrLine1: Swift.String) -> Self
+  final public func shipAddrLine2(_ shipAddrLine2: Swift.String) -> Self
+  final public func shipAddrLine3(_ shipAddrLine3: Swift.String) -> Self
+  final public func shipAddrPostCode(_ shipAddrPostCode: Swift.String) -> Self
+  final public func shipAddrState(_ shipAddrState: Swift.String) -> Self
+  final public func workPhone(_ workPhone: uSDK.Phone) -> Self
+  final public func purchaseInstalData(_ purchaseInstalData: Swift.String) -> Self
+  final public func mcc(_ mcc: Swift.String) -> Self
+  final public func merchantCountryCode(_ merchantCountryCode: Swift.String) -> Self
+  final public func merchantName(_ merchantName: Swift.String) -> Self
+  final public func merchantRiskIndicator(_ merchantRiskIndicator: uSDK.MerchantRiskIndicator) -> Self
+  final public func messageCategory(_ messageCategory: Swift.String) -> Self
+  final public func purchaseAmount(_ purchaseAmount: Swift.String) -> Self
+  final public func purchaseCurrency(_ purchaseCurrency: Swift.String) -> Self
+  final public func purchaseExponent(_ purchaseExponent: Swift.String) -> Self
+  final public func purchaseDate(_ purchaseDate: Swift.String) -> Self
+  final public func recurringExpiry(_ recurringExpiry: Swift.String) -> Self
+  final public func recurringFrequency(_ recurringFrequency: Swift.String) -> Self
+  final public func transType(_ transType: Swift.String) -> Self
+  final public func threeDSRequestorAppURL(_ threeDSRequestorAppURL: Swift.String) -> Self
+  @objc deinit
+}
+public class ThreeDSRequestorAuthenticationInfo {
+  public init()
+  public func threeDSReqAuthData(_ threeDSReqAuthData: Swift.String) -> Self
+  public func threeDSReqAuthMethod(_ threeDSReqAuthMethod: Swift.String) -> Self
+  public func threeDSReqAuthTimestamp(_ threeDSReqAuthTimestamp: Swift.String) -> Self
+  @objc deinit
+}
+public class ThreeDSRequestorPriorAuthenticationInfo {
+  public init()
+  public func threeDSReqPriorAuthData(_ threeDSReqPriorAuthData: Swift.String) -> Self
+  public func threeDSReqPriorAuthMethod(_ threeDSReqPriorAuthMethod: Swift.String) -> Self
+  public func threeDSReqPriorAuthTimestamp(_ threeDSReqPriorAuthTimestamp: Swift.String) -> Self
+  public func threeDSReqPriorRef(_ threeDSReqPriorRef: Swift.String) -> Self
+  @objc deinit
+}
+public enum TransStatus : Swift.String, Swift.Decodable {
+  case Y
+  case N
+  case D
+  case I
+  case A
+  case U
+  case R
+  case C
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct Warning {
+}
+extension uSDK.ErrorDescriptions : Swift.Equatable {}
+extension uSDK.ErrorDescriptions : Swift.Hashable {}
+extension uSDK.ErrorDescriptions : Swift.RawRepresentable {}
+extension uSDK.SplitSdkAppearance : Swift.Equatable {}
+extension uSDK.SplitSdkAppearance : Swift.Hashable {}
+extension uSDK.SplitSdkAppearance : Swift.RawRepresentable {}
+extension uSDK.SplitSdkTheme : Swift.Equatable {}
+extension uSDK.SplitSdkTheme : Swift.Hashable {}
+extension uSDK.SplitSdkTheme : Swift.RawRepresentable {}
+extension uSDK.TransStatus : Swift.Equatable {}
+extension uSDK.TransStatus : Swift.Hashable {}
+extension uSDK.TransStatus : Swift.RawRepresentable {}

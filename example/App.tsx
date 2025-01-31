@@ -1,40 +1,49 @@
 import { useEvent } from 'expo';
-import ExpoMsignia3ds, { ExpoMsignia3dsView } from 'expo-msignia-3ds';
+import {  useState } from "react";
+
 import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
+import * as MSignia3ds from "expo-msignia-3ds";
+
 export default function App() {
-  const onChangePayload = useEvent(ExpoMsignia3ds, 'onChange');
+const [message, setMessage] = useState<string>("");
+
+  async function setupSession() {
+    try {
+      const result = await MSignia3ds.setupSession(
+        "pavlo-elrosado-demo@msignia.com", // userId
+        "519209", // cardId
+        "420e1eea-84d3-4f74-8c11-776cec65a047", // orderId
+        "https://3ds.hercules.ec:50002/api/Transaction/Exchange", // exchangeTransactionDetailsUrl
+        "https://3ds.hercules.ec:50002/api/Transaction/Result", //transactionResultUrl
+        "https://emv3ds.elrosado.com/split-sdk-client/v1", //splitSdkServerUrl
+      );
+      setMessage(result ?? "")
+      console.log(result); // Logs: "SDK initialization called"
+    } catch (error) {
+      console.error("Error setupSession :", error);
+    }
+  }
+
+  
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
-        <Group name="Constants">
-          <Text>{ExpoMsignia3ds.PI}</Text>
-        </Group>
-        <Group name="Functions">
-          <Text>{ExpoMsignia3ds.hello()}</Text>
-        </Group>
-        <Group name="Async functions">
-          <Button
-            title="Set value"
-            onPress={async () => {
-              await ExpoMsignia3ds.setValueAsync('Hello from JS!');
-            }}
-          />
-        </Group>
-        <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
-        </Group>
-        <Group name="Views">
-          <ExpoMsignia3dsView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
-          />
-        </Group>
-      </ScrollView>
-    </SafeAreaView>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Text>
+        Estado: {message}
+      </Text>
+       <Button
+        title="Iniciar uSDK"
+        onPress={setupSession}
+      />
+     
+    </View>
   );
 }
 

@@ -1,48 +1,84 @@
 import ExpoModulesCore
+import UIKit
 
 public class ExpoMsignia3dsModule: Module {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+ 
   public func definition() -> ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoMsignia3ds')` in JavaScript.
     Name("ExpoMsignia3ds")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants([
-      "PI": Double.pi
-    ])
+    Events("onSdkInitialized")
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+    // Eventos que pueden ser escuchados desde JS
+    Events("onSplitSdkInitialized", "onSplitSdkError")
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      return "Hello world! 👋"
-    }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { (value: String) in
-      // Send an event to JavaScript.
-      self.sendEvent("onChange", [
-        "value": value
-      ])
-    }
+    // Definir la función asincrónica que maneja la inicialización
+    AsyncFunction("setupSession") { (
+        userId: String, 
+        cardId: String, 
+        orderId: String, 
+        exchangeTransactionDetailsUrl: String, 
+        transactionResultUrl: String, 
+        splitSdkServerUrl: String
+      ) in await self.presentMsignia3dsViewController(
+        userId: userId, 
+        cardId: cardId, 
+        orderId: orderId,  
+        exchangeTransactionDetailsUrl: exchangeTransactionDetailsUrl, 
+        transactionResultUrl: transactionResultUrl, 
+        splitSdkServerUrl: splitSdkServerUrl
+    )}
+  }
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of the
-    // view definition: Prop, Events.
-    View(ExpoMsignia3dsView.self) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { (view: ExpoMsignia3dsView, url: URL) in
-        if view.webView.url != url {
-          view.webView.load(URLRequest(url: url))
+  // Función asincrónica para presentar el ViewController
+  func presentMsignia3dsViewController(
+      userId: String, 
+      cardId: String, 
+      orderId: String,  
+      exchangeTransactionDetailsUrl: String, 
+      transactionResultUrl: String, 
+      splitSdkServerUrl: String
+    ) async -> String {
+    return await withCheckedContinuation { continuation in
+      DispatchQueue.main.async {
+        if let rootViewController = UIApplication.shared.connectedScenes
+          .compactMap({ $0 as? UIWindowScene })
+          .first?.windows
+          .first(where: { $0.isKeyWindow })?.rootViewController {
+            
+          let viewController = ExpoMsignia3dsViewController(
+            userId: userId, 
+            cardId: cardId,
+            orderId: orderId,
+            exchangeTransactionDetailsUrl: exchangeTransactionDetailsUrl, 
+            transactionResultUrl: transactionResultUrl, 
+            splitSdkServerUrl: splitSdkServerUrl
+          )
+          
+          // Flag para evitar múltiples llamadas
+          var hasResumed = false
+
+          // Establecer el closure de finalización para cuando el ViewController termine
+          viewController.onCompletion = { result in
+            guard !hasResumed else { return } // Evita llamadas duplicadas
+            hasResumed = true
+
+            // Llamamos a la continuación con el resultado del ViewController
+            continuation.resume(returning: result)
+          }
+          
+          // Presentamos el ViewController como una hoja
+          viewController.modalPresentationStyle = .pageSheet
+          viewController.sheetPresentationController?.detents = [.medium(), .large()]
+          viewController.sheetPresentationController?.prefersGrabberVisible = false
+          
+          // Presentamos el ViewController
+          rootViewController.present(viewController, animated: true, completion: nil)
+        } else {
+          // Si no conseguimos el rootViewController, llamamos a la continuación con un error
+          continuation.resume(returning: "Failed to retrieve root view controller")
         }
       }
-
-      Events("onLoad")
     }
   }
 }

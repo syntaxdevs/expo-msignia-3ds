@@ -1,0 +1,13 @@
+// postinstall.gradle
+
+println "Ejecutando postinstall.gradle"
+
+def gradlePropertiesPath = rootProject.file("gradle.properties")
+
+if (gradlePropertiesPath.exists()) {
+    def gradleProperties = gradlePropertiesPath.text
+
+    if (!gradleProperties.contains("android.enableJetifier=true")) {
+        gradlePropertiesPath.append("\nandroid.enableJetifier=true\n")
+    }
+}

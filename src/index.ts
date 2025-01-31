@@ -1,5 +1,18 @@
 // Reexport the native module. On web, it will be resolved to ExpoMsignia3dsModule.web.ts
 // and on native platforms to ExpoMsignia3dsModule.ts
-export { default } from './ExpoMsignia3dsModule';
-export { default as ExpoMsignia3dsView } from './ExpoMsignia3dsView';
-export * from  './ExpoMsignia3ds.types';
+
+import ExpoMsignia3dsModule from "./ExpoMsignia3dsModule";
+
+
+// Inicializar y autenticar el SDK
+export async function setupSession(
+  userId: string,
+  cardId: string,
+  orderId: string,
+  exchangeTransactionDetailsUrl: string,
+  transactionResultUrl: string,
+  splitSdkServerUrl: string
+): Promise<string> {
+  return await ExpoMsignia3dsModule.setupSession(userId, cardId, orderId, exchangeTransactionDetailsUrl, transactionResultUrl, splitSdkServerUrl);
+}
+

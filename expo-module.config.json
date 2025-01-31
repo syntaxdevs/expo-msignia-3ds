@@ -1,17 +1,15 @@
 {
-  "platforms": [
-    "apple",
-    "android",
-    "web"
-  ],
+  "platforms": ["apple", "android", "web"],
   "apple": {
-    "modules": [
-      "ExpoMsignia3dsModule"
-    ]
+    "modules": ["ExpoMsignia3dsModule"]
   },
   "android": {
-    "modules": [
-      "expo.modules.msignia3ds.ExpoMsignia3dsModule"
-    ]
+    "gradleAarProjects": [
+      {
+        "name": "uSDK",
+        "aarFilePath": "android/libs/uSDK-android-7.3.22.aar"
+      }
+    ],
+    "modules": ["expo.modules.msignia3ds.ExpoMsignia3dsModule"]
   }
 }

@@ -20,10 +20,14 @@ Pod::Spec.new do |s|
 
   s.dependency 'ExpoModulesCore'
 
+  s.source = { :git => 'https://github.com/David-Montenegro/test-module.git'}
   # Swift/Objective-C compatibility
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
   }
 
-  s.source_files = "**/*.{h,m,mm,swift,hpp,cpp}"
+  # s.source_files = "**/*.{h,m,mm,swift,hpp,cpp}"
+  s.source_files = "**/*.{h,m,swift}"
+  s.exclude_files="uSDK.xcframework/**/*.h"
+  s.vendored_frameworks = 'uSDK.xcframework'
 end
