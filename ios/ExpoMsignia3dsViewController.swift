@@ -5,7 +5,7 @@ class ExpoMsignia3dsViewController: UIViewController {
     private var splitSdkClient: SplitSdkClient = SplitSdkClientImpl()
     
     // Closure para enviar la respuesta al módulo
-    var onCompletion: ((String) -> Void)?
+    var onCompletion: (([String: Any]) -> Void)?
 
     // Variables para almacenar los parámetros
     private var userId: String
@@ -53,12 +53,20 @@ class ExpoMsignia3dsViewController: UIViewController {
                     self.authenticate(self)
 
                 case .failure(let error):
-                    self.onCompletion?("Failed to initialize SDK: \(error)")
+                    self.onCompletion?([
+                        "msg": "Failed to initialize SDK: \(error)",  
+                        "code": "",                           
+                        "error": true                              
+                    ])
                     self.dismiss(animated: true, completion: nil)
                 }
             }
         } catch {
-            self.onCompletion?("Error during SDK initialization: \(error.localizedDescription)")
+            self.onCompletion?([
+                "msg": "Error during SDK initialization: \(error.localizedDescription)",  
+                "code": "",                           
+                "error": true                              
+            ])
             dismiss(animated: true, completion: nil)
         }
     }
@@ -86,39 +94,85 @@ class ExpoMsignia3dsViewController: UIViewController {
                             switch authResult {
                                 case .authenticated(let authenticationResult):
                                     NSLog("authenticated: \(authenticationResult)")
-                                    self.onCompletion?("Authenticated")
+                                    self.onCompletion?([
+                                        "msg": "\(authenticationResult)",  
+                                        "code": "AUTHENTICATED",                           
+                                        "error": false                              
+                                    ])
+                                    self.dismiss(animated: true, completion: nil)
+
                                 case .notAuthenticated(let authenticationResult):
                                     NSLog("notAuthenticated: \(authenticationResult)")
-                                    self.onCompletion?("notAuthenticated")
+                                    self.onCompletion?([
+                                        "msg": "\(authenticationResult)",  
+                                        "code": "NOT_AUTHENTICATED",                           
+                                        "error": true                              
+                                    ])
+                                    self.dismiss(animated: true, completion: nil)
+
                                 case .cancelled(let authenticationResult):
                                     NSLog("cancelled: \(authenticationResult)")
-                                    self.onCompletion?("cancelled")
+                                    self.onCompletion?([
+                                        "msg": "\(authenticationResult)",  
+                                        "code": "CANCELLED",                           
+                                        "error": true                              
+                                    ])
+                                    self.dismiss(animated: true, completion: nil)
+
                                 case .decoupledAuthBeingPerformed(let authenticationResult):
                                     NSLog("decoupledAuthBeingPerformed: \(authenticationResult)")
-                                    self.onCompletion?("decoupledAuthBeingPerformed")
+                                    self.onCompletion?([
+                                        "msg": "\(authenticationResult)",  
+                                        "code": "DECOUPLED_AUTH_BEGIN_PERFORMED",                           
+                                        "error": true                              
+                                    ])
+                                    self.dismiss(animated: true, completion: nil)
+
                                 case .error(let authenticationResult):
                                     NSLog("notAuthenticated: \(authenticationResult)")
-                                    self.onCompletion?("error")
+                                    self.onCompletion?([
+                                        "msg": "\(authenticationResult)",  
+                                        "code": "ERROR",                           
+                                        "error": true                              
+                                    ])
                                     self.dismiss(animated: true, completion: nil)
 
                                 @unknown default:
                                     NSLog("Unknown authentication result")
-                                    self.onCompletion?("Unknown authentication result")
+                                    self.onCompletion?([
+                                        "msg": "Unknown authentication result",  
+                                        "code": "",                           
+                                        "error": true                              
+                                    ])
+                                    self.dismiss(animated: true, completion: nil)
                           }
                       case .failure(let error):
-                         NSLog("Authentication failed: \(error)")
-                         self.onCompletion?("Authentication failed: ")
+                        NSLog("Authentication failed: \(error)")
+                        self.onCompletion?([
+                            "msg": "Authentication failed: \(error)",  
+                            "code": "",                           
+                            "error": true                              
+                        ])
+                        self.dismiss(animated: true, completion: nil)
                       }
                   }
               } catch {
-                    self.onCompletion?("Error during authentication: ")
                     NSLog("Error during authentication: \(error)")
+                    self.onCompletion?([
+                        "msg": "Error during authentication: \(error)",  
+                        "code": "",                           
+                        "error": true                              
+                    ])
                     self.dismiss(animated: true, completion: nil)
               }
        
         } catch {
-            print("An exception caught during `authenticate` call: ")
-            self.onCompletion?("An exception caught during `authenticate` call: ")
+            NSLog("An exception caught during `authenticate` call")
+            self.onCompletion?([
+                "msg": "An exception caught during `authenticate` call",  
+                "code": "",                           
+                "error": true                              
+            ])
             self.dismiss(animated: true, completion: nil)
         }
     }

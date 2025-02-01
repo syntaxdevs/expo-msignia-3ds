@@ -38,7 +38,7 @@ public class ExpoMsignia3dsModule: Module {
       exchangeTransactionDetailsUrl: String, 
       transactionResultUrl: String, 
       splitSdkServerUrl: String
-    ) async -> String {
+    ) async ->  [String: Any] {
     return await withCheckedContinuation { continuation in
       DispatchQueue.main.async {
         if let rootViewController = UIApplication.shared.connectedScenes
@@ -66,17 +66,26 @@ public class ExpoMsignia3dsModule: Module {
             // Llamamos a la continuación con el resultado del ViewController
             continuation.resume(returning: result)
           }
-          
-          // Presentamos el ViewController como una hoja
-          viewController.modalPresentationStyle = .pageSheet
-          viewController.sheetPresentationController?.detents = [.medium(), .large()]
-          viewController.sheetPresentationController?.prefersGrabberVisible = false
-          
+
+          // Presentamos el ViewController a pantalla completa
+          viewController.modalPresentationStyle = .fullScreen
+          // viewController.modalTransitionStyle = .coverVertical // Deslizar hacia arriba
+
+          // // Presentamos el ViewController como una hoja
+          // viewController.modalPresentationStyle = .pageSheet
+          // viewController.sheetPresentationController?.detents = [ .large()]
+          // viewController.sheetPresentationController?.prefersGrabberVisible = false
+
           // Presentamos el ViewController
           rootViewController.present(viewController, animated: true, completion: nil)
+         
         } else {
           // Si no conseguimos el rootViewController, llamamos a la continuación con un error
-          continuation.resume(returning: "Failed to retrieve root view controller")
+          continuation.resume(returning: [
+            "msg": "Failed to retrieve root view controller",
+            "code": "",
+            "error": true
+          ])
         }
       }
     }

@@ -18,8 +18,9 @@ const [message, setMessage] = useState<string>("");
         "https://3ds.hercules.ec:50002/api/Transaction/Result", //transactionResultUrl
         "https://emv3ds.elrosado.com/split-sdk-client/v1", //splitSdkServerUrl
       );
-      setMessage(result ?? "")
-      console.log(result); // Logs: "SDK initialization called"
+      const { msg, code , error} = result
+      setMessage(code ?? "")
+      console.log(result); 
     } catch (error) {
       console.error("Error setupSession :", error);
     }

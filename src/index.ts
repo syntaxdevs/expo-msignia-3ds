@@ -12,7 +12,13 @@ export async function setupSession(
   exchangeTransactionDetailsUrl: string,
   transactionResultUrl: string,
   splitSdkServerUrl: string
-): Promise<string> {
-  return await ExpoMsignia3dsModule.setupSession(userId, cardId, orderId, exchangeTransactionDetailsUrl, transactionResultUrl, splitSdkServerUrl);
+): Promise<{ msg: string; code: string; error: boolean }> {
+  return await ExpoMsignia3dsModule.setupSession(
+    userId,
+    cardId,
+    orderId,
+    exchangeTransactionDetailsUrl,
+    transactionResultUrl,
+    splitSdkServerUrl);
 }
 
