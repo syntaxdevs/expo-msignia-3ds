@@ -79,7 +79,7 @@ public class ExpoMsignia3dsModule: Module {
             "msg": "Failed to retrieve root view controller",
             "code": "",
             "error": true,
-            "result": {}
+            "result": NSNull()
           ])
         }
       }
