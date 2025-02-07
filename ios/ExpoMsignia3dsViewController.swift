@@ -1,5 +1,6 @@
 import UIKit
 import uSDK
+import Foundation
 
 class ExpoMsignia3dsViewController: UIViewController {
     private var splitSdkClient: SplitSdkClient = SplitSdkClientImpl()
@@ -35,6 +36,31 @@ class ExpoMsignia3dsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+
+    func convertToJsonString(authenticationResult: AuthenticationResult) -> String? {
+        let dict: [String: Any] = [
+            "threeDSServerTransID": authenticationResult.threeDSServerTransID ?? "",
+            "splitSdkServerTransID": authenticationResult.splitSdkServerTransID ?? "",
+            "status": authenticationResult.status ?? "",
+            "cardholderInfo": authenticationResult.cardholderInfo ?? "",
+            "error": [
+                "errorCode": authenticationResult.error?.errorCode ?? "",
+                "errorDescription": authenticationResult.error?.errorDescription ?? "",
+                "errorDetails": authenticationResult.error?.errorDetails ?? ""
+            ]
+        ]
+        
+        // Intentamos serializar el diccionario como JSON
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+            return String(data: jsonData, encoding: .utf8)
+        } catch {
+            print("Error al convertir AuthenticationResult a JSON: \(error)")
+            return nil
+        }
+    }
+
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -56,7 +82,8 @@ class ExpoMsignia3dsViewController: UIViewController {
                     self.onCompletion?([
                         "msg": "Failed to initialize SDK: \(error)",  
                         "code": "",                           
-                        "error": true                              
+                        "error": true,
+                        "result": {}                              
                     ])
                     self.dismiss(animated: true, completion: nil)
                 }
@@ -65,7 +92,8 @@ class ExpoMsignia3dsViewController: UIViewController {
             self.onCompletion?([
                 "msg": "Error during SDK initialization: \(error.localizedDescription)",  
                 "code": "",                           
-                "error": true                              
+                "error": true,
+                "result": {}                                
             ])
             dismiss(animated: true, completion: nil)
         }
@@ -94,46 +122,61 @@ class ExpoMsignia3dsViewController: UIViewController {
                             switch authResult {
                                 case .authenticated(let authenticationResult):
                                     NSLog("authenticated: \(authenticationResult)")
+
+                                    let resultjsonString = self.convertToJsonString(authenticationResult: authenticationResult)
                                     self.onCompletion?([
-                                        "msg": "\(authenticationResult)",  
+                                        "msg": "",  
                                         "code": "AUTHENTICATED",                           
-                                        "error": false                              
+                                        "error": false,
+                                        "result": resultjsonString                                
                                     ])
                                     self.dismiss(animated: true, completion: nil)
 
                                 case .notAuthenticated(let authenticationResult):
                                     NSLog("notAuthenticated: \(authenticationResult)")
+
+                                    let resultjsonString = self.convertToJsonString(authenticationResult: authenticationResult)
                                     self.onCompletion?([
-                                        "msg": "\(authenticationResult)",  
+                                        "msg": "",  
                                         "code": "NOT_AUTHENTICATED",                           
-                                        "error": true                              
+                                        "error": true,
+                                        "result": resultjsonString                               
                                     ])
                                     self.dismiss(animated: true, completion: nil)
 
                                 case .cancelled(let authenticationResult):
                                     NSLog("cancelled: \(authenticationResult)")
+
+                                    let resultjsonString = self.convertToJsonString(authenticationResult: authenticationResult)
                                     self.onCompletion?([
-                                        "msg": "\(authenticationResult)",  
+                                        "msg": "",  
                                         "code": "CANCELLED",                           
-                                        "error": true                              
+                                        "error": true,
+                                        "result": resultjsonString                               
                                     ])
                                     self.dismiss(animated: true, completion: nil)
 
                                 case .decoupledAuthBeingPerformed(let authenticationResult):
                                     NSLog("decoupledAuthBeingPerformed: \(authenticationResult)")
+
+                                    let resultjsonString = self.convertToJsonString(authenticationResult: authenticationResult)
                                     self.onCompletion?([
-                                        "msg": "\(authenticationResult)",  
+                                        "msg": "",  
                                         "code": "DECOUPLED_AUTH_BEGIN_PERFORMED",                           
-                                        "error": true                              
+                                        "error": true,
+                                        "result": resultjsonString                               
                                     ])
                                     self.dismiss(animated: true, completion: nil)
 
                                 case .error(let authenticationResult):
                                     NSLog("notAuthenticated: \(authenticationResult)")
+
+                                    let resultjsonString = self.convertToJsonString(authenticationResult: authenticationResult)
                                     self.onCompletion?([
-                                        "msg": "\(authenticationResult)",  
+                                        "msg": " \(authenticationResult)",  
                                         "code": "ERROR",                           
-                                        "error": true                              
+                                        "error": true,
+                                        "result": resultjsonString                               
                                     ])
                                     self.dismiss(animated: true, completion: nil)
 
@@ -141,8 +184,9 @@ class ExpoMsignia3dsViewController: UIViewController {
                                     NSLog("Unknown authentication result")
                                     self.onCompletion?([
                                         "msg": "Unknown authentication result",  
-                                        "code": "",                           
-                                        "error": true                              
+                                        "code": "UNKNOW",                           
+                                        "error": true,
+                                        "result": {}                               
                                     ])
                                     self.dismiss(animated: true, completion: nil)
                           }
@@ -151,7 +195,8 @@ class ExpoMsignia3dsViewController: UIViewController {
                         self.onCompletion?([
                             "msg": "Authentication failed: \(error)",  
                             "code": "",                           
-                            "error": true                              
+                            "error": true,
+                            "result": {}                               
                         ])
                         self.dismiss(animated: true, completion: nil)
                       }
@@ -161,7 +206,8 @@ class ExpoMsignia3dsViewController: UIViewController {
                     self.onCompletion?([
                         "msg": "Error during authentication: \(error)",  
                         "code": "",                           
-                        "error": true                              
+                        "error": true,
+                        "result": {}                               
                     ])
                     self.dismiss(animated: true, completion: nil)
               }
@@ -171,7 +217,8 @@ class ExpoMsignia3dsViewController: UIViewController {
             self.onCompletion?([
                 "msg": "An exception caught during `authenticate` call",  
                 "code": "",                           
-                "error": true                              
+                "error": true,
+                "result": {}                               
             ])
             self.dismiss(animated: true, completion: nil)
         }

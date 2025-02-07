@@ -69,12 +69,6 @@ public class ExpoMsignia3dsModule: Module {
 
           // Presentamos el ViewController a pantalla completa
           viewController.modalPresentationStyle = .fullScreen
-          // viewController.modalTransitionStyle = .coverVertical // Deslizar hacia arriba
-
-          // // Presentamos el ViewController como una hoja
-          // viewController.modalPresentationStyle = .pageSheet
-          // viewController.sheetPresentationController?.detents = [ .large()]
-          // viewController.sheetPresentationController?.prefersGrabberVisible = false
 
           // Presentamos el ViewController
           rootViewController.present(viewController, animated: true, completion: nil)
@@ -84,7 +78,8 @@ public class ExpoMsignia3dsModule: Module {
           continuation.resume(returning: [
             "msg": "Failed to retrieve root view controller",
             "code": "",
-            "error": true
+            "error": true,
+            "result": {}
           ])
         }
       }
