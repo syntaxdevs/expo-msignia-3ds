@@ -1,6 +1,6 @@
 {
   "name": "expo-msignia-3ds",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "3ds mSiGNIA usdk ",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -30,11 +30,7 @@
   "author": "David Andres Montenegro Correa <blackmont.dev@gmail.com> (https://github.com/David-Montenegro/test-module.git)",
   "license": "MIT",
   "homepage": "https://github.com/David-Montenegro/test-module.git#readme",
-  "dependencies": {
-    "expo": "~52.0.11",
-    "react": "18.3.1",
-    "react-native": "0.76.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/react": "~18.3.12",
     "expo-module-scripts": "^4.0.2",

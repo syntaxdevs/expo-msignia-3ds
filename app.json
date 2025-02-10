@@ -1,5 +1,9 @@
 {
   "android": {
-    "package": "com.blackmont.dev.expomsignia3ds"
+    "package": "com.blackmont.dev.expomsignia3ds",
+    "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
   }
 }

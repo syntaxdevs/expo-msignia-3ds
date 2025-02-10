@@ -4,8 +4,8 @@ import { Button,  Text, View } from 'react-native';
 
 import * as MSignia3ds from "expo-msignia-3ds";
 
-export default function App() {
-const [message, setMessage] = useState<string>("");
+const Home =() => { 
+  const [message, setMessage] = useState<string>("");
 
   async function setupSession() {
     try {
@@ -18,6 +18,8 @@ const [message, setMessage] = useState<string>("");
         "https://emv3ds.elrosado.com/split-sdk-client/v1", //splitSdkServerUrl
       );
       const { msg, code , error, result} = resultAuthenticate
+            console.log(" resultAuthenticate :", resultAuthenticate);
+
       setMessage(code ?? "")
     } catch (error) {
       console.error("Error setupSession :", error);
@@ -39,8 +41,10 @@ const [message, setMessage] = useState<string>("");
         title="Iniciar uSDK"
         onPress={setupSession}
       />
-     
     </View>
-  );
+  )
 }
 
+export default function App() {
+  return <Home />
+}
